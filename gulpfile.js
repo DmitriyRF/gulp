@@ -6,7 +6,10 @@ var gulp				=	require('gulp'),
 	uglify				=	require('gulp-uglifyjs'),//сжатие файлов
 	cssnano				=	require('gulp-cssnano'),
 	rename				=	require('gulp-rename'),
-	del 				=	require('del');	
+	del 				=	require('del'),
+	imagemin			=	require('gulp-imagemin'),
+	pngquant			=	require('imagemin-pngquant'),
+	cache				=	reuqire('gulp-cache');	
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
 
@@ -43,6 +46,10 @@ gulp.task('clean', function() {
 	return del.sync('dist');
 });
 
+gulp.task('clean-cache', function() {
+	return cache.clearAll();
+});
+
 gulp.task('scripts', function(){
 	return gulp
 	.src([
@@ -63,7 +70,7 @@ gulp.task('css-libs',['less'], function(){
 	.pipe(gulp.dest('app/css'));
 })
 
-gulp.task('build',['clean', 'less', 'scripts'], function(){
+gulp.task('build',['clean', 'img', 'less', 'scripts'], function(){
 	
 	var build_css		=	gulp
 		.src([
@@ -84,4 +91,17 @@ gulp.task('build',['clean', 'less', 'scripts'], function(){
 		.src(['app/*.html'])
 		.pipe(gulp.dest('dist'));	
 
+});
+
+
+gulp.task('img', function(){
+	return gulp
+	.src('app/img/**/*')
+	.pipe(cache(imagemin({
+		interlaced: true,
+		progressive: true,
+		svgoPlugins: [{removeViewBox: false}],
+		use:[pngquant()]
+	})))
+	.pipe(gulp.dest('dist/img'));
 });
