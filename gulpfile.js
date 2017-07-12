@@ -6,8 +6,6 @@ var var_gulp	=	require('gulp'),
 
 var_gulp.task('less', function(){
 	return var_gulp.src('app/less/**/*.less')
-	.pipe(var_less({
-      paths: [ path.join(__dirname, 'less', 'includes') ]
-    }))
+	.pipe(var_less())
 	.pipe(var_gulp.dest('app/css'));
 });
