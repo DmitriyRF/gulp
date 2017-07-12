@@ -5,7 +5,8 @@ var gulp				=	require('gulp'),
 	concat				=	require('gulp-concat'),//объединение всех файлов в одни
 	uglify				=	require('gulp-uglifyjs'),//сжатие файлов
 	cssnano				=	require('gulp-cssnano'),
-	rename				=	require('gulp-rename');	
+	rename				=	require('gulp-rename'),
+	del 				=	require('del');	
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
 
@@ -38,6 +39,10 @@ gulp.task('browserSync', function(){
 	});
 });
 
+gulp.task('clean', function() {
+	return del.sync('dist');
+});
+
 gulp.task('scripts', function(){
 	return gulp
 	.src([
@@ -57,3 +62,26 @@ gulp.task('css-libs',['less'], function(){
 	.pipe(rename({suffix: '.min'}))
 	.pipe(gulp.dest('app/css'));
 })
+
+gulp.task('build',['clean', 'less', 'scripts'], function(){
+	
+	var build_css		=	gulp
+		.src([
+			'app/css/gulp.css',
+			'app/css/libs.min.css',
+		])
+		.pipe(gulp.dest('dist/css'));
+
+	var build_fonts		=	gulp
+		.src(['app/fonts/**/*'])
+		.pipe(gulp.dest('dist/fonts'));
+
+	var build_js		=	gulp
+		.src(['app/js/**/*'])
+		.pipe(gulp.dest('dist/js'));
+
+	var build_html		=	gulp
+		.src(['app/*.html'])
+		.pipe(gulp.dest('dist'));	
+
+});
