@@ -3,8 +3,9 @@ var gulp				=	require('gulp'),
 	path 				=	require('path'),
 	browserSync			=	require('browser-sync'),
 	concat				=	require('gulp-concat'),//объединение всех файлов в одни
-	uglify				=	require('gulp-uglifyjs');//сжатие файлов
-		
+	uglify				=	require('gulp-uglifyjs'),//сжатие файлов
+	cssnano				=	require('gulp-cssnano'),
+	rename				=	require('gulp-rename');	
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
 
@@ -22,7 +23,7 @@ gulp.task('less', function(){
 	.pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('watch',['browserSync', 'less', 'scripts'], function(){
+gulp.task('watch',['browserSync', 'css-libs', 'scripts'], function(){
 	gulp.watch('app/less/**/*.less', [less]);
 	gulp.watch('app/*.html', browserSync.reload);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
@@ -48,3 +49,11 @@ gulp.task('scripts', function(){
 	.pipe(uglify())
 	.pipe(gulp.dest('app/js'));
 });
+
+gulp.task('css-libs',['less'], function(){
+	return gulp
+	.src('app/css/libs.css')
+	.pipe(cssnano())
+	.pipe(rename({suffix: '.min'}))
+	.pipe(gulp.dest('app/css'));
+})
