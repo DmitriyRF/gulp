@@ -1,11 +1,26 @@
-var var_gulp	=	require('gulp'),
-	var_less	=	require('gulp-less');
-
+var gulp				=	require('gulp'),
+	less				=	require('gulp-less');
+	browserSync			=	require('browser-sync');
+		
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
 
-var_gulp.task('less', function(){
-	return var_gulp.src('app/less/**/*.less')
-	.pipe(var_less())
-	.pipe(var_gulp.dest('app/css'));
+gulp.task('less', function(){
+	return gulp.src('app/less/**/*.less')
+	.pipe(less())
+	.pipe(gulp.dest('app/css'))
+	.pipe(browserSync.reload({stream: true}));
+});
+
+gulp.task('watch',['browser-sync', 'less'], function(){
+	gulp.watch('app/less/**/*.less', [less]);
+});
+
+gulp.task('browser-sync', function(){
+	browserSync({
+		server: {
+			baseDir: 'app'
+		},
+		notify: false
+	});
 });
