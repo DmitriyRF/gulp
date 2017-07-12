@@ -9,7 +9,8 @@ var gulp				=	require('gulp'),
 	del 				=	require('del'),
 	imagemin			=	require('gulp-imagemin'),
 	pngquant			=	require('imagemin-pngquant'),
-	cache				=	reuqire('gulp-cache');	
+	cache				=	require('gulp-cache'),
+	autoprefixer		=	require('gulp-autoprefixer');	
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
 
@@ -23,6 +24,12 @@ gulp.task('less', function(){
 //	      console.log(err);
 //	})
     )
+    .pipe(autoprefixer([
+    	'last 15 versions',
+    	'> 1%',
+    	'ie 8',
+    	'ie 7',
+    ], {cascade: true}))
 	.pipe(gulp.dest('app/css'))
 	.pipe(browserSync.reload({stream: true}));
 });
