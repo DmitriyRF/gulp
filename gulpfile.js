@@ -1,6 +1,8 @@
 var gulp				=	require('gulp'),
-	less				=	require('gulp-less');
-	browserSync			=	require('browser-sync');
+	less				=	require('gulp-less'),
+	browserSync			=	require('browser-sync'),
+	concat				=	require('gulp-concat'),//объединение всех файлов в одни
+	uglify				=	require('gulp-uglifyjs');//сжатие файлов
 		
 //	npm install gulp-less --save-dev
 //	--save-dev сохранение пакета и версии в папку или packaje.json
@@ -12,15 +14,28 @@ gulp.task('less', function(){
 	.pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('watch',['browser-sync', 'less'], function(){
+gulp.task('watch',['browserSync', 'less'], function(){
 	gulp.watch('app/less/**/*.less', [less]);
+	gulp.watch('app/*.html', browserSync.reload);
+	gulp.watch('app/js/**/*.js', browserSync.reload);
 });
 
-gulp.task('browser-sync', function(){
+gulp.task('browserSync', function(){
 	browserSync({
 		server: {
 			baseDir: 'app'
 		},
 		notify: false
 	});
+});
+
+gulp.task('scripts', function(){
+	return gulp.src([
+			'app/assets/jquery/dist/jquery.min.js',
+			'app/assets/magnific-popup/dist/jquery.magnific-popup.min.js',
+			'app/assets/bootstrap/dist/js/bootstrap.min.js'
+	])
+	.pipe(concat('assets.min.js'))
+	.pipe(uglify())
+	.pipe(gulp.dest('app/js'));
 });
