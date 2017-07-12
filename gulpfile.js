@@ -1,7 +1,13 @@
-var gulp	=	require('gulp');
+var var_gulp	=	require('gulp'),
+	var_less	=	require('gulp-less');
 
-gulp.task('mytask', function(){
-	return gulp.src('source-files') // take something
-	.pipe(plugin()) // do something
-	.pipe(gulp.dest('folder')); // put somewhere
+//	npm install gulp-less --save-dev
+//	--save-dev сохранение пакета и версии в папку или packaje.json
+
+var_gulp.task('less', function(){
+	return var_gulp.src('app/less/**/*.less')
+	.pipe(var_less({
+      paths: [ path.join(__dirname, 'less', 'includes') ]
+    }))
+	.pipe(var_gulp.dest('app/css'));
 });
